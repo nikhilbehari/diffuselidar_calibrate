@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html>
+<head>
+    <title>Spatial Calibration of Diffuse LiDARs</title>
+    <meta property="og:title" content="Spatial Calibration of Diffuse LiDARs">
+    <meta property="og:description" content="Per-pixel spatial calibration for diffuse direct time-of-flight LiDARs. Technical report.">
+    <meta property="og:image" content="images/teaser.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Spatial Calibration of Diffuse LiDARs">
+    <meta name="twitter:description" content="Per-pixel spatial calibration for diffuse direct time-of-flight LiDARs.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href='https://fonts.googleapis.com/css?family=Titillium+Web:400,600,400italic,600italic,300,300italic' rel='stylesheet' type='text/css'>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="container">
+    <div class="paper-title">
+        <h1 style="margin-bottom: 14px">Spatial Calibration of Diffuse LiDARs</h1>
+        <div style="display: flex; justify-content: center; margin-top: 6px;">
+            <div style="background-color: #A04A2A; color: white; padding: 3px 10px; font-size: 13px; border-radius: 5px; text-align: center; font-weight: 400;">Technical Report</div>
+        </div>
+    </div>
+
+    <div id="authors">
+        <div class="author-row" style="display: flex; justify-content: center; gap: 36px;">
+            <div class="text-center"><a href="https://nikhilbehari.github.io" target="_blank">Nikhil<br>Behari</a></div>
+            <div class="text-center"><a href="https://www.media.mit.edu/people/raskar/overview/" target="_blank">Ramesh<br>Raskar</a></div>
+        </div>
+        <div class="affil-row" style="margin: 16px auto 0; text-align: center;">
+            <span style="display: inline-block; margin: 0 14px;">Massachusetts Institute of Technology</span>
+        </div>
+    </div>
+
+    <div style="clear: both">
+        <div class="paper-btn-parent">
+            <a class="paper-btn" href="https://arxiv.org/abs/2603.06531" target="_blank">Paper</a>
+            <a class="paper-btn" href="https://github.com/NikhilBehari/diffuselidar_calibrate" target="_blank">Code</a>
+        </div>
+    </div>
+
+    <section id="teaser">
+        <figure style="width: 100%;">
+            <a href="images/teaser.png">
+                <img style="width: 100%;" src="images/teaser.png" alt="Diffuse LiDAR calibration teaser">
+            </a>
+            <p class="caption_justify">
+                <b>Spatial calibration of diffuse LiDARs.</b> Unlike conventional LiDARs, each pixel
+                of a <span class="diffuse">diffuse direct time-of-flight</span> sensor aggregates
+                photon returns over a wide instantaneous field of view, mixing returns from
+                different scene regions in a single histogram. We recover, for each pixel, its
+                effective support region and relative spatial sensitivity in a co-located RGB image.
+            </p>
+        </figure>
+    </section>
+
+    <section id="abstract">
+        <h2>Abstract</h2>
+        <hr>
+        <p>
+            Diffuse direct time-of-flight LiDARs report per-pixel depth histograms formed by
+            aggregating photon returns over a wide instantaneous field of view, violating the
+            single-ray assumption behind standard LiDAR-RGB calibration. We present a simple
+            <span class="diffuse">spatial calibration procedure</span> that estimates, for each
+            diffuse LiDAR pixel, its footprint (effective support region) and relative spatial
+            sensitivity in a co-located RGB image plane. Using a scanned retroreflective patch
+            with background subtraction, we recover per-pixel response maps that provide an
+            explicit LiDAR-to-RGB correspondence for cross-modal alignment and fusion. We
+            demonstrate the method on the ams OSRAM TMF8828.
+        </p>
+    </section>
+
+    <section id="hardware">
+        <h2>Hardware and rigid mount</h2>
+        <hr>
+        <figure style="width: 100%;">
+            <a href="images/pixel_modes.png">
+                <img style="width: 100%;" src="images/pixel_modes.png" alt="TMF8828 pixel aggregation modes">
+            </a>
+            <p class="caption_justify">
+                <b>Pixel aggregation modes on the TMF8828.</b> The sensor supports multiple spatial
+                aggregation layouts; in each mode, reported pixels integrate photon returns over a
+                wide instantaneous field of view under flood illumination. Our example calibration
+                uses 3&#215;3 Wide mode (P = 9).
+            </p>
+        </figure>
+
+        <figure style="width: 100%;">
+            <a href="images/rigidmount.png">
+                <img style="width: 100%;" src="images/rigidmount.png" alt="Custom rigid sensor mount">
+            </a>
+            <p class="caption_justify">
+                <b>Custom rigid mount</b> for co-located diffuse LiDAR (TMF8828) and RGB
+                (RealSense D435i). Left: CAD design with dimensions; right: the physical mount used
+                for our calibration captures. STLs are included in the repository's
+                <code>assets/</code>.
+            </p>
+        </figure>
+    </section>
+
+    <section id="scan">
+        <h2>Calibration scan</h2>
+        <hr>
+        <figure style="width: 100%;">
+            <a href="images/scan_points.png">
+                <img style="width: 100%;" src="images/scan_points.png" alt="Retroreflective patch scan grid">
+            </a>
+            <p class="caption_justify">
+                <b>Retroreflective patch scan grid</b> sampled with a UR10 robot arm. We traverse an
+                80&#215;45 grid (K = 3600) in a snake pattern to reduce motion between points. At each
+                grid location we record synchronized RGB frames and per-pixel LiDAR histograms; an
+                identical patch-removed scan is captured for background subtraction.
+            </p>
+        </figure>
+    </section>
+
+    <section id="results">
+        <h2>Per-pixel spatial response</h2>
+        <hr>
+        <figure style="width: 100%;">
+            <a href="images/per_pixel.png">
+                <img style="width: 100%;" src="images/per_pixel.png" alt="Per-pixel response maps overlaid on RGB">
+            </a>
+            <p class="caption_justify">
+                <b>Per-pixel spatial response maps</b> for the TMF8828 3&#215;3 Wide mode overlaid on the
+                co-located RGB image. Nonzero regions show each pixel's effective support in RGB
+                coordinates, and the response magnitudes encode relative spatial sensitivity within
+                that support.
+            </p>
+        </figure>
+
+        <figure style="width: 100%;">
+            <a href="images/calibration_output.png">
+                <img style="width: 100%;" src="images/calibration_output.png" alt="Calibration output overlay">
+            </a>
+            <p class="caption_justify">
+                <b>Calibration applied at inference.</b> Per-pixel response maps from the
+                self-contained <code>demo.ipynb</code> notebook visualized over a sample RealSense
+                frame. The released <code>capture_with_overlay.py</code> tool runs the same
+                visualization live against a connected sensor.
+            </p>
+        </figure>
+    </section>
+
+    <section id="bibtex">
+        <h2>Citation</h2>
+        <hr>
+        <pre>@article{behari2026spatial,
+  title   = {Spatial Calibration of Diffuse LiDARs},
+  author  = {Behari, Nikhil and Raskar, Ramesh},
+  journal = {arXiv preprint arXiv:2603.06531},
+  year    = {2026},
+}</pre>
+    </section>
+
+</div>
+</body>
+</html>
